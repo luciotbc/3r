@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+
+  api:
+    build: api
+    depends_on:
+      - database
+      - redis
+    env_file:
+      - .env/development/database
+      - .env/development/api
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./api:/usr/src/app
+      - gem_cache:/gems
+
+  database:
+    image: postgres:alpine
+    env_file:
+      - .env/development/database
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+
+volumes:
+  db_data:
+  gem_cache:
+  redis_data:
+  
